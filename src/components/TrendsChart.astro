@@ -1,0 +1,523 @@
+---
+export interface Props {
+	height?: number;
+	showControls?: boolean;
+	articlesData?: any[];
+}
+
+const { height = 400, showControls = true, articlesData = [] } = Astro.props;
+
+// Calculate real counts from articles data
+const hopeCount = articlesData.filter(article => article.category === 'hope').length;
+const despairCount = articlesData.filter(article => article.category === 'despair').length;
+const totalCount = articlesData.length;
+---
+
+<div class="trends-container">
+	{showControls && (
+		<div class="chart-controls">
+			<div class="time-controls">
+				<button class="time-btn active" data-range="7d">7 Days</button>
+				<button class="time-btn" data-range="30d">30 Days</button>
+				<button class="time-btn" data-range="90d">90 Days</button>
+				<button class="time-btn" data-range="1y">1 Year</button>
+			</div>
+			<div class="chart-legend">
+				<div class="legend-item">
+					<div class="legend-color hope"></div>
+					<span>Hope Articles</span>
+				</div>
+				<div class="legend-item">
+					<div class="legend-color despair"></div>
+					<span>Despair Articles</span>
+				</div>
+			</div>
+		</div>
+	)}
+	
+	<div class="chart-wrapper">
+		<canvas id="trends-chart" width="800" height={height}></canvas>
+		<div class="chart-overlay" id="chart-tooltip"></div>
+	</div>
+	
+	<div class="chart-insights">
+		<div class="insight hope-insight">
+			<div class="insight-icon">🌱</div>
+			<div class="insight-content">
+				<span class="insight-metric" id="hope-count">{hopeCount}</span>
+				<span class="insight-label">Hope articles total</span>
+			</div>
+		</div>
+		<div class="insight balance-insight">
+			<div class="insight-icon">📊</div>
+			<div class="insight-content">
+				<span class="insight-metric" id="total-count">{totalCount}</span>
+				<span class="insight-label">Total articles</span>
+			</div>
+		</div>
+		<div class="insight despair-insight">
+			<div class="insight-icon">⚡</div>
+			<div class="insight-content">
+				<span class="insight-metric" id="despair-count">{despairCount}</span>
+				<span class="insight-label">Despair articles total</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.trends-container {
+		background: var(--bg-card);
+		border-radius: 16px;
+		padding: 2rem;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+		border: 1px solid var(--border-color);
+	}
+
+	.chart-controls {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 2rem;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+	}
+
+	.time-controls {
+		display: flex;
+		gap: 0.5rem;
+		background: var(--bg-secondary);
+		border-radius: 8px;
+		padding: 0.25rem;
+	}
+
+	.time-btn {
+		padding: 0.5rem 1rem;
+		border: none;
+		background: none;
+		border-radius: 6px;
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--text-secondary);
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.time-btn:hover {
+		color: var(--text-primary);
+	}
+
+	.time-btn.active {
+		background: var(--bg-primary);
+		color: var(--text-primary);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.chart-legend {
+		display: flex;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+	}
+
+	.legend-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.9rem;
+		color: var(--text-secondary);
+	}
+
+	.legend-color {
+		width: 16px;
+		height: 3px;
+		border-radius: 2px;
+	}
+
+	.legend-color.hope {
+		background: #6b8269;
+	}
+
+	.legend-color.despair {
+		background: #ba8777;
+	}
+
+	.chart-wrapper {
+		position: relative;
+		background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+		border-radius: 12px;
+		padding: 1.5rem;
+		margin-bottom: 2rem;
+		border: 1px solid var(--border-color);
+	}
+
+	#trends-chart {
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+	}
+
+	.chart-overlay {
+		position: absolute;
+		background: rgba(0, 0, 0, 0.9);
+		color: white;
+		padding: 0.75rem 1rem;
+		border-radius: 6px;
+		font-size: 0.85rem;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.2s ease;
+		z-index: 1000;
+		max-width: 200px;
+		display: block;
+	}
+
+	.chart-overlay.visible {
+		opacity: 1;
+		display: block;
+	}
+
+	.chart-insights {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+		gap: 1rem;
+	}
+
+	.insight {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: 1.5rem;
+		border-radius: 12px;
+		border: 1px solid var(--border-color);
+		transition: all 0.3s ease;
+	}
+
+	.insight:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+	}
+
+	.hope-insight {
+		background: rgba(107, 130, 105, 0.05);
+		border-color: rgba(107, 130, 105, 0.2);
+	}
+
+	.despair-insight {
+		background: rgba(186, 135, 119, 0.05);
+		border-color: rgba(186, 135, 119, 0.2);
+	}
+
+	.balance-insight {
+		background: var(--bg-card);
+		border-color: var(--border-color);
+	}
+
+	.insight-icon {
+		font-size: 1.5rem;
+		opacity: 0.8;
+	}
+
+	.insight-content {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.insight-metric {
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: var(--text-primary);
+		line-height: 1.2;
+	}
+
+	.insight-label {
+		font-size: 0.85rem;
+		color: var(--text-secondary);
+		margin-top: 0.25rem;
+	}
+
+	@media (max-width: 768px) {
+		.trends-container {
+			padding: 1.5rem;
+		}
+
+		.chart-controls {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.chart-legend {
+			gap: 1rem;
+		}
+
+		.chart-insights {
+			grid-template-columns: 1fr;
+			gap: 1rem;
+		}
+
+		.insight {
+			padding: 1rem;
+		}
+
+		.insight-metric {
+			font-size: 1.3rem;
+		}
+	}
+</style>
+
+<script>
+	interface DataPoint {
+		date: string;
+		hopeCount: number;
+		despairCount: number;
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const canvas = document.getElementById('trends-chart') as HTMLCanvasElement;
+		const tooltip = document.getElementById('chart-tooltip') as HTMLDivElement;
+		const timeButtons = document.querySelectorAll('.time-btn');
+		
+		if (!canvas || !tooltip) return;
+		
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+
+		// Generate data from actual articles
+		function generateData(days: number): DataPoint[] {
+			const data: DataPoint[] = [];
+			const now = new Date();
+			
+			// Get articles data from the global window if available
+			const articlesData = (window as any).articlesData || [];
+			
+			// Group articles by date
+			const articlesByDate = {};
+			if (articlesData && articlesData.length > 0) {
+				articlesData.forEach(article => {
+					const date = article.date ? new Date(article.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+					if (!articlesByDate[date]) {
+						articlesByDate[date] = { hope: 0, despair: 0 };
+					}
+					const category = article.category;
+					if (category === 'hope' || category === 'despair') {
+						articlesByDate[date][category]++;
+					}
+				});
+			}
+			
+			// Create data points for the requested number of days with cumulative counts
+			let cumulativeHope = 0;
+			let cumulativeDespair = 0;
+			
+			for (let i = days - 1; i >= 0; i--) {
+				const date = new Date(now);
+				date.setDate(date.getDate() - i);
+				const dateStr = date.toISOString().split('T')[0];
+				
+				const counts = articlesByDate[dateStr] || { hope: 0, despair: 0 };
+				
+				// Add today's articles to cumulative count
+				cumulativeHope += counts.hope;
+				cumulativeDespair += counts.despair;
+				
+				data.push({
+					date: dateStr,
+					hopeCount: cumulativeHope,
+					despairCount: cumulativeDespair
+				});
+			}
+			
+			return data;
+		}
+
+		let currentData = generateData(7);
+
+		function drawChart(data: DataPoint[]) {
+			const padding = 60;
+			const width = canvas.width - padding * 2;
+			const height = canvas.height - padding * 2;
+			
+			// Clear canvas
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			// Find max value for y-axis scaling
+			const maxCount = Math.max(
+				...data.map(d => Math.max(d.hopeCount, d.despairCount))
+			);
+			const yAxisMax = Math.ceil(maxCount * 1.2); // Add 20% padding
+			
+			// Draw background grid
+			ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+			ctx.lineWidth = 1;
+			
+			// Horizontal grid lines
+			const gridLines = 5;
+			for (let i = 0; i <= gridLines; i++) {
+				const y = padding + (height / gridLines) * i;
+				ctx.beginPath();
+				ctx.moveTo(padding, y);
+				ctx.lineTo(padding + width, y);
+				ctx.stroke();
+				
+				// Y-axis labels
+				ctx.fillStyle = '#999';
+				ctx.font = '12px system-ui';
+				ctx.textAlign = 'right';
+				const value = Math.round(yAxisMax - (yAxisMax / gridLines) * i);
+				ctx.fillText(value.toString(), padding - 10, y + 4);
+			}
+			
+			// Draw lines
+			function drawLine(values: number[], color: string, lineWidth: number = 3) {
+				ctx.strokeStyle = color;
+				ctx.lineWidth = lineWidth;
+				ctx.lineCap = 'round';
+				ctx.lineJoin = 'round';
+				ctx.setLineDash([]);
+				
+				ctx.beginPath();
+				values.forEach((value, index) => {
+					const x = padding + (width / (values.length - 1 || 1)) * index;
+					const y = padding + height - (value / (yAxisMax || 1)) * height;
+					
+					if (index === 0) {
+						ctx.moveTo(x, y);
+					} else {
+						ctx.lineTo(x, y);
+					}
+				});
+				ctx.stroke();
+				
+				// Draw points
+				ctx.fillStyle = color;
+				values.forEach((value, index) => {
+					const x = padding + (width / (values.length - 1 || 1)) * index;
+					const y = padding + height - (value / (yAxisMax || 1)) * height;
+					
+					ctx.beginPath();
+					ctx.arc(x, y, 4, 0, Math.PI * 2);
+					ctx.fill();
+					
+					// Add subtle white border to points
+					ctx.strokeStyle = '#ffffff';
+					ctx.lineWidth = 2;
+					ctx.stroke();
+				});
+			}
+			
+			// Draw hope line
+			drawLine(data.map(d => d.hopeCount), '#6b8269', 3);
+			
+			// Draw despair line
+			drawLine(data.map(d => d.despairCount), '#ba8777', 3);
+			
+			
+			// X-axis labels
+			ctx.fillStyle = '#999';
+			ctx.font = '12px system-ui';
+			ctx.textAlign = 'center';
+			data.forEach((point, index) => {
+				if (index % Math.max(1, Math.floor(data.length / 6)) === 0) {
+					const x = padding + (width / (data.length - 1 || 1)) * index;
+					const date = new Date(point.date);
+					const label = date.toLocaleDateString('en-US', { 
+						month: 'short', 
+						day: 'numeric' 
+					});
+					ctx.fillText(label, x, canvas.height - 20);
+				}
+			});
+			
+			// Y-axis label
+			ctx.save();
+			ctx.translate(20, canvas.height / 2);
+			ctx.rotate(-Math.PI / 2);
+			ctx.fillStyle = '#666';
+			ctx.font = '14px system-ui';
+			ctx.textAlign = 'center';
+			ctx.fillText('Number of Articles', 0, 0);
+			ctx.restore();
+		}
+
+		function handleMouseMove(event: MouseEvent) {
+			try {
+				const rect = canvas.getBoundingClientRect();
+				const x = event.clientX - rect.left;
+				const y = event.clientY - rect.top;
+				
+				// Convert to canvas coordinates
+				const canvasX = (x / rect.width) * canvas.width;
+				
+				// Find nearest data point
+				const padding = 60;
+				const width = canvas.width - padding * 2;
+				const dataIndex = Math.round(((canvasX - padding) / width) * (currentData.length - 1));
+				
+				
+				if (dataIndex >= 0 && dataIndex < currentData.length && canvasX >= padding && canvasX <= padding + width) {
+					const point = currentData[dataIndex];
+					const date = new Date(point.date);
+					const dateStr = date.toLocaleDateString('en-US', {
+						month: 'short',
+						day: 'numeric',
+						year: 'numeric'
+					});
+					
+					// Create tooltip content
+					const tooltipContent = `
+						<div style="font-weight: bold; margin-bottom: 4px; color: white;">${dateStr}</div>
+						<div style="color: #90ee90;">Hope: ${point.hopeCount} articles</div>
+						<div style="color: #ffb347;">Despair: ${point.despairCount} articles</div>
+					`;
+					
+					tooltip.innerHTML = tooltipContent;
+					tooltip.style.left = `${x + 10}px`;
+					tooltip.style.top = `${y - 60}px`;
+					tooltip.classList.add('visible');
+				} else {
+					tooltip.classList.remove('visible');
+				}
+			} catch (error) {
+				console.error('Error in handleMouseMove:', error);
+			}
+		}
+
+		function handleMouseLeave() {
+			tooltip.classList.remove('visible');
+		}
+
+		// Event listeners
+		canvas.addEventListener('mousemove', handleMouseMove);
+		canvas.addEventListener('mouseleave', handleMouseLeave);
+
+		timeButtons.forEach(button => {
+			button.addEventListener('click', () => {
+				timeButtons.forEach(btn => btn.classList.remove('active'));
+				button.classList.add('active');
+				
+				const range = button.getAttribute('data-range');
+				const days = range === '7d' ? 7 : range === '30d' ? 30 : range === '90d' ? 90 : 365;
+				
+				currentData = generateData(days);
+				drawChart(currentData);
+			});
+		});
+
+		// Set canvas size
+		const container = canvas.parentElement;
+		if (container) {
+			canvas.width = container.clientWidth - 40;
+			canvas.height = canvas.getAttribute('height') ? parseInt(canvas.getAttribute('height')!) : 400;
+		}
+
+		// Initial draw
+		drawChart(currentData);
+
+		// Handle window resize
+		window.addEventListener('resize', () => {
+			if (container) {
+				canvas.width = container.clientWidth - 40;
+				drawChart(currentData);
+			}
+		});
+	});
+</script>

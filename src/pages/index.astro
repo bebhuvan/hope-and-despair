@@ -1,0 +1,428 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import { getCollection } from 'astro:content';
+
+// Get all articles
+const hopeArticles = await getCollection('hope');
+const despairArticles = await getCollection('despair');
+const contextArticles = await getCollection('context');
+
+// Sort by date
+const sortedHope = hopeArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const sortedDespair = despairArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const sortedContext = contextArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Layout title="Hope and Despair">
+  <Navigation />
+  
+  <header class="hero">
+    <div class="container">
+      <h1 class="site-title">
+        <span class="logo-symbol">
+          <span class="sun-moon">🌗</span>
+        </span>
+        Hope and Despair
+      </h1>
+      <p class="site-description">
+        Curating the stories that shape how we see our future
+      </p>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="container">
+      <section class="articles-section">
+        <h2 class="section-heading">
+          <span class="section-marker hope">🌱</span>
+          Hope
+          <span class="article-count">{sortedHope.length}</span>
+        </h2>
+        
+        {sortedHope.length === 0 ? (
+          <div class="empty-state">
+            <p>No hope articles yet. Add your first article using PagesCMS or your content management system.</p>
+          </div>
+        ) : (
+          sortedHope.slice(0, 3).map((article) => (
+            <article class="article-item">
+              <div class="article-meta">
+                <span class="source">{article.data.source || 'Unknown Source'}</span>
+                <span class="time">{article.data.timeAgo || 'Recently'}</span>
+              </div>
+              <h3 class="article-title">
+                <a href={article.data.url || `/article/${article.slug}`}>{article.data.title}</a>
+              </h3>
+              <p class="article-summary">{article.data.summary}</p>
+            </article>
+          ))
+        )}
+        
+        <div class="section-footer">
+          <a href="/hope" class="view-more">View all hope stories →</a>
+        </div>
+      </section>
+
+      <section class="articles-section">
+        <h2 class="section-heading">
+          <span class="section-marker despair">⚡</span>
+          Despair
+          <span class="article-count">{sortedDespair.length}</span>
+        </h2>
+        
+        {sortedDespair.length === 0 ? (
+          <div class="empty-state">
+            <p>No despair articles yet. Add your first article using PagesCMS or your content management system.</p>
+          </div>
+        ) : (
+          sortedDespair.slice(0, 3).map((article) => (
+            <article class="article-item">
+              <div class="article-meta">
+                <span class="source">{article.data.source || 'Unknown Source'}</span>
+                <span class="time">{article.data.timeAgo || 'Recently'}</span>
+              </div>
+              <h3 class="article-title">
+                <a href={article.data.url || `/article/${article.slug}`}>{article.data.title}</a>
+              </h3>
+              <p class="article-summary">{article.data.summary}</p>
+            </article>
+          ))
+        )}
+        
+        <div class="section-footer">
+          <a href="/despair" class="view-more">View all despair stories →</a>
+        </div>
+      </section>
+
+      <section class="articles-section">
+        <h2 class="section-heading">
+          <span class="section-marker context">🔍</span>
+          Context
+          <span class="article-count">{sortedContext.length}</span>
+        </h2>
+        
+        {sortedContext.length === 0 ? (
+          <div class="empty-state">
+            <p>No context articles yet. Add your first article using PagesCMS or your content management system.</p>
+          </div>
+        ) : (
+          sortedContext.slice(0, 3).map((article) => (
+            <article class="article-item">
+              <div class="article-meta">
+                <span class="source">{article.data.source || 'Unknown Source'}</span>
+                <span class="time">{article.data.timeAgo || 'Recently'}</span>
+              </div>
+              <h3 class="article-title">
+                <a href={article.data.url || `/article/${article.slug}`}>{article.data.title}</a>
+              </h3>
+              <p class="article-summary">{article.data.summary}</p>
+            </article>
+          ))
+        )}
+        
+        <div class="section-footer">
+          <a href="/context" class="view-more">View all context stories →</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2024 Hope and Despair. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <style>
+    .hero {
+      padding: 120px 0 80px;
+      text-align: center;
+      background: var(--bg-primary);
+    }
+
+    .site-title {
+      font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+      font-size: clamp(2.4rem, 7vw, 3.2rem);
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      font-optical-sizing: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+
+    .logo-symbol {
+      font-size: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.1));
+      transition: all 0.4s ease;
+    }
+
+    .logo-symbol:hover {
+      transform: translateY(-2px) scale(1.05);
+      filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.15));
+    }
+
+    .sun-moon {
+      opacity: 0.85;
+      transition: all 0.4s ease;
+      display: inline-block;
+    }
+
+    .logo-symbol:hover .sun-moon {
+      opacity: 1;
+      transform: rotate(5deg);
+    }
+
+    .site-description {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 0 0 120px;
+      background: var(--bg-primary);
+    }
+
+    .articles-section {
+      max-width: 600px;
+      margin: 0 auto 100px;
+      padding: 2rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .articles-section:nth-child(1) {
+      background: rgba(156, 174, 156, 0.03);
+      border: 1px solid rgba(156, 174, 156, 0.1);
+    }
+
+    .articles-section:nth-child(2) {
+      background: rgba(212, 163, 148, 0.03);
+      border: 1px solid rgba(212, 163, 148, 0.1);
+    }
+
+    .articles-section:nth-child(3) {
+      background: rgba(139, 161, 188, 0.03);
+      border: 1px solid rgba(139, 161, 188, 0.1);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+      font-size: 1.8rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .section-marker {
+      font-size: 1.2rem;
+    }
+
+    .article-count {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .article-item {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .article-item:last-of-type {
+      border-bottom: none;
+    }
+
+    .article-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .source {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .article-title {
+      font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 0.8rem;
+      line-height: 1.3;
+    }
+
+    .article-title a {
+      text-decoration: none;
+    }
+
+    .articles-section:nth-child(1) .article-title a {
+      color: #6b8269;
+    }
+
+    .articles-section:nth-child(2) .article-title a {
+      color: #ba8777;
+    }
+
+    .articles-section:nth-child(3) .article-title a {
+      color: #5a7a9c;
+    }
+
+    .article-summary {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      /* Keep serif for reading content */
+    }
+
+    .empty-state {
+      padding: 3rem;
+      text-align: center;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+    }
+
+    .empty-state p {
+      color: var(--text-muted);
+      font-style: italic;
+      margin: 0;
+    }
+
+    .section-footer {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .view-more {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .articles-section:nth-child(1) .view-more {
+      color: #6b8269;
+    }
+
+    .articles-section:nth-child(1) .view-more:hover {
+      color: #9cae9c;
+      text-decoration: underline;
+    }
+
+    .articles-section:nth-child(2) .view-more {
+      color: #ba8777;
+    }
+
+    .articles-section:nth-child(2) .view-more:hover {
+      color: #d4a394;
+      text-decoration: underline;
+    }
+
+    .site-footer {
+      padding: 60px 0;
+      text-align: center;
+      background: var(--bg-primary);
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .site-footer p {
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding: 140px 0 60px;
+      }
+
+      .site-title {
+        font-size: 2.2rem;
+        gap: 0.6rem;
+      }
+
+      .logo-symbol {
+        font-size: 2rem;
+      }
+
+      .site-description {
+        font-size: 1.1rem;
+      }
+
+      .section-heading {
+        font-size: 1.6rem;
+      }
+
+      .article-title {
+        font-size: 1.6rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        padding: 120px 0 40px;
+      }
+
+      .site-title {
+        font-size: 1.8rem;
+        gap: 0.5rem;
+      }
+
+      .logo-symbol {
+        font-size: 1.8rem;
+      }
+
+      .site-description {
+        font-size: 1rem;
+      }
+
+      .section-heading {
+        font-size: 1.4rem;
+      }
+
+      .article-count {
+        font-size: 0.8rem;
+      }
+
+      .articles-section {
+        margin: 0 auto 60px;
+        padding: 1.5rem;
+      }
+
+      .article-meta {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+    }
+  </style>
+</Layout>

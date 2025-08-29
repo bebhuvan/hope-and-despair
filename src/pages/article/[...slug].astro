@@ -1,0 +1,352 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const hopeArticles = await getCollection('hope');
+  const despairArticles = await getCollection('despair');
+  const contextArticles = await getCollection('context');
+  
+  const allArticles = [...hopeArticles, ...despairArticles, ...contextArticles];
+  
+  return allArticles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await article.render();
+
+const categoryColors = {
+  hope: '#6b8269',
+  despair: '#ba8777',
+  context: '#5a7a9c'
+};
+
+const categoryIcons = {
+  hope: '🌱',
+  despair: '⚡',
+  context: '🔍'
+};
+
+const categoryColor = categoryColors[article.data.category] || '#6b8269';
+const categoryIcon = categoryIcons[article.data.category] || '🔍';
+---
+
+<Layout title={article.data.title}>
+  <Navigation />
+  
+  <header class="article-header">
+    <div class="container">
+      <div class="article-category">
+        <span class="category-icon">{categoryIcon}</span>
+        <span class="category-name" style={`color: ${categoryColor}`}>
+          {article.data.category?.charAt(0).toUpperCase() + article.data.category?.slice(1)}
+        </span>
+      </div>
+      
+      <h1 class="article-title">{article.data.title}</h1>
+      
+      <div class="article-meta">
+        <span class="source">{article.data.source}</span>
+        <span class="time">{article.data.timeAgo}</span>
+      </div>
+      
+      <p class="article-summary">{article.data.summary}</p>
+      
+      {article.data.tags && (
+        <div class="article-tags">
+          {article.data.tags.map((tag) => (
+            <span class="tag" style={`background: ${categoryColor}20; color: ${categoryColor}`}>{tag}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  </header>
+
+  <main class="article-content">
+    <div class="container">
+      <div class="content-wrapper">
+        <Content />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .article-header {
+    padding: 140px 0 60px;
+    text-align: center;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .article-category {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .category-icon {
+    font-size: 1.5rem;
+  }
+
+  .category-name {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .article-title {
+    font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .article-meta {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+  }
+
+  .source {
+    font-weight: 500;
+  }
+
+  .article-summary {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto 2rem;
+  }
+
+  .article-tags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .tag {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .article-content {
+    padding: 60px 0 120px;
+    background: var(--bg-primary);
+  }
+
+  .content-wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+  }
+
+  .content-wrapper :global(h1),
+  .content-wrapper :global(h2),
+  .content-wrapper :global(h3) {
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--text-primary);
+    margin: 2rem 0 1rem;
+  }
+
+  .content-wrapper :global(h2) {
+    font-size: 1.75rem;
+    margin-top: 3rem;
+  }
+
+  .content-wrapper :global(p) {
+    margin-bottom: 1.5rem;
+  }
+
+  .content-wrapper :global(ul),
+  .content-wrapper :global(ol) {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+  }
+
+  .content-wrapper :global(li) {
+    margin-bottom: 0.75rem;
+  }
+
+  .content-wrapper :global(a) {
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+  }
+
+  .content-wrapper :global(a:hover) {
+    color: var(--text-primary);
+    border-bottom-color: var(--text-primary);
+  }
+
+  .content-wrapper :global(.source-link-card) {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem auto;
+    transition: all 0.2s ease;
+    position: relative;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .content-wrapper :global(.source-link-card:hover) {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .content-wrapper :global(.source-link-card::before) {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--border-color);
+    opacity: 0.6;
+  }
+
+  .content-wrapper :global(.link-card-header) {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .content-wrapper :global(.source-logo-text) {
+    width: 32px;
+    height: 32px;
+    background: var(--text-muted);
+    color: var(--bg-primary);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: -0.5px;
+  }
+
+  .content-wrapper :global(.link-meta) {
+    flex: 1;
+  }
+
+  .content-wrapper :global(.source-name) {
+    display: block;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    margin-bottom: 0.125rem;
+  }
+
+  .content-wrapper :global(.link-url) {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+  }
+
+  .content-wrapper :global(.link-title) {
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem;
+    text-decoration: none;
+  }
+
+  .content-wrapper :global(.link-description) {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 0 0 1.25rem;
+  }
+
+  .content-wrapper :global(.read-original-btn) {
+    display: inline-block;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  .content-wrapper :global(.read-original-btn::after) {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: currentColor;
+    transition: width 0.3s ease;
+  }
+
+  .content-wrapper :global(.read-original-btn:hover) {
+    color: var(--text-primary);
+  }
+
+  .content-wrapper :global(.read-original-btn:hover::after) {
+    width: 100%;
+  }
+
+  .content-wrapper :global(.article-image) {
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .content-wrapper :global(.article-image img) {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+
+  .content-wrapper :global(.image-caption) {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .article-header {
+      padding: 120px 0 40px;
+    }
+
+    .article-title {
+      font-size: 2rem;
+    }
+
+    .article-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .content-wrapper {
+      font-size: 1rem;
+    }
+  }
+</style>

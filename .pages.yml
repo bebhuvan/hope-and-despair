@@ -1,0 +1,354 @@
+# PagesCMS Configuration for Hope and Despair
+# Full rich text editing with media support
+
+# Media Configuration
+media:
+  - name: images
+    label: Images
+    input: public/images
+    output: /images
+    extensions: [jpg, jpeg, png, webp, avif, gif, svg]
+    categories:
+      - images
+      - documents
+  
+  - name: blog-images
+    label: Blog Images
+    input: public/images/blog
+    output: /images/blog
+    extensions: [jpg, jpeg, png, webp, avif, gif]
+    categories:
+      - images
+
+# Content Collections
+content:
+  # Hope Articles
+  - name: hope
+    label: Hope Stories
+    type: collection
+    path: src/content/hope
+    format: yaml
+    filename: "{{slug}}.md"
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+        
+      - name: slug
+        label: Slug
+        type: string
+        required: true
+        hint: URL-friendly version of the title
+        
+      - name: description
+        label: Description
+        type: text
+        required: true
+        hint: Brief summary for SEO and previews
+        
+      - name: date
+        label: Publication Date
+        type: date
+        required: true
+        
+      - name: author
+        label: Author
+        type: string
+        required: true
+        
+      - name: source
+        label: Source
+        type: string
+        hint: Original source or publication
+        
+      - name: sourceUrl
+        label: Source URL
+        type: string
+        hint: Link to original article
+        
+      - name: image
+        label: Featured Image
+        type: image
+        options:
+          media: images
+          path: blog
+          extensions: [jpg, jpeg, png, webp]
+          
+      - name: imageAlt
+        label: Image Alt Text
+        type: string
+        hint: Accessibility description for the image
+        
+      - name: tags
+        label: Tags
+        type: list
+        options:
+          field:
+            type: string
+        hint: Topics and keywords for this article
+        
+      - name: featured
+        label: Featured Article
+        type: boolean
+        hint: Show on homepage
+        
+      - name: body
+        label: Content
+        type: rich-text
+        required: true
+        options:
+          media: blog-images
+          path: blog
+          extensions: [jpg, jpeg, png, webp, gif]
+
+  # Despair Articles
+  - name: despair
+    label: Despair Stories
+    type: collection
+    path: src/content/despair
+    format: yaml
+    filename: "{{slug}}.md"
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+        
+      - name: slug
+        label: Slug
+        type: string
+        required: true
+        hint: URL-friendly version of the title
+        
+      - name: description
+        label: Description
+        type: text
+        required: true
+        hint: Brief summary for SEO and previews
+        
+      - name: date
+        label: Publication Date
+        type: date
+        required: true
+        
+      - name: author
+        label: Author
+        type: string
+        required: true
+        
+      - name: source
+        label: Source
+        type: string
+        hint: Original source or publication
+        
+      - name: sourceUrl
+        label: Source URL
+        type: string
+        hint: Link to original article
+        
+      - name: image
+        label: Featured Image
+        type: image
+        options:
+          media: images
+          path: blog
+          extensions: [jpg, jpeg, png, webp]
+          
+      - name: imageAlt
+        label: Image Alt Text
+        type: string
+        hint: Accessibility description for the image
+        
+      - name: tags
+        label: Tags
+        type: list
+        options:
+          field:
+            type: string
+        hint: Topics and keywords for this article
+        
+      - name: featured
+        label: Featured Article
+        type: boolean
+        hint: Show on homepage
+        
+      - name: body
+        label: Content
+        type: rich-text
+        required: true
+        options:
+          media: blog-images
+          path: blog
+          extensions: [jpg, jpeg, png, webp, gif]
+
+  # Context Articles
+  - name: context
+    label: Context Stories
+    type: collection
+    path: src/content/context
+    format: yaml
+    filename: "{{slug}}.md"
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+        
+      - name: slug
+        label: Slug
+        type: string
+        required: true
+        hint: URL-friendly version of the title
+        
+      - name: description
+        label: Description
+        type: text
+        required: true
+        hint: Brief summary for SEO and previews
+        
+      - name: date
+        label: Publication Date
+        type: date
+        required: true
+        
+      - name: author
+        label: Author
+        type: string
+        required: true
+        
+      - name: source
+        label: Source
+        type: string
+        hint: Original source or publication
+        
+      - name: sourceUrl
+        label: Source URL
+        type: string
+        hint: Link to original article
+        
+      - name: image
+        label: Featured Image
+        type: image
+        options:
+          media: images
+          path: blog
+          extensions: [jpg, jpeg, png, webp]
+          
+      - name: imageAlt
+        label: Image Alt Text
+        type: string
+        hint: Accessibility description for the image
+        
+      - name: tags
+        label: Tags
+        type: list
+        options:
+          field:
+            type: string
+        hint: Topics and keywords for this article
+        
+      - name: featured
+        label: Featured Article
+        type: boolean
+        hint: Show on homepage
+        
+      - name: body
+        label: Content
+        type: rich-text
+        required: true
+        options:
+          media: blog-images
+          path: blog
+          extensions: [jpg, jpeg, png, webp, gif]
+
+  # Site Settings
+  - name: settings
+    label: Site Settings
+    type: file
+    path: src/content/settings.yml
+    format: yaml
+    fields:
+      - name: title
+        label: Site Title
+        type: string
+        required: true
+        
+      - name: description
+        label: Site Description
+        type: text
+        required: true
+        
+      - name: url
+        label: Site URL
+        type: string
+        required: true
+        
+      - name: author
+        label: Default Author
+        type: string
+        
+      - name: social
+        label: Social Media
+        type: object
+        fields:
+          - name: twitter
+            label: Twitter Handle
+            type: string
+          - name: github
+            label: GitHub Username
+            type: string
+          - name: email
+            label: Contact Email
+            type: string
+            
+      - name: analytics
+        label: Analytics
+        type: object
+        fields:
+          - name: googleAnalyticsId
+            label: Google Analytics ID
+            type: string
+          - name: umamiAnalyticsId
+            label: Umami Analytics ID
+            type: string
+            
+      - name: seo
+        label: SEO Settings
+        type: object
+        fields:
+          - name: ogImage
+            label: Default OG Image
+            type: image
+            options:
+              media: images
+              extensions: [jpg, jpeg, png, webp]
+          - name: keywords
+            label: Default Keywords
+            type: list
+            options:
+              field:
+                type: string
+
+# Components for reusable field groups
+components:
+  - name: article-meta
+    label: Article Metadata
+    fields:
+      - name: author
+        label: Author
+        type: string
+        required: true
+      - name: date
+        label: Date
+        type: date
+        required: true
+      - name: source
+        label: Source
+        type: string
+
+# Global Settings
+settings:
+  hide: false
+  content:
+    merge: true

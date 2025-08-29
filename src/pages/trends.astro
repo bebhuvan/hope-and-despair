@@ -1,0 +1,290 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import TrendsChart from '../components/TrendsChart.astro';
+import { getCollection } from 'astro:content';
+
+// Get all articles and count by category
+const hopeArticles = await getCollection('hope');
+const despairArticles = await getCollection('despair');
+const contextArticles = await getCollection('context');
+
+// Prepare articles data for the chart component
+const allArticles = [
+  ...hopeArticles.map(a => ({ ...a.data, category: 'hope' })),
+  ...despairArticles.map(a => ({ ...a.data, category: 'despair' })),
+  ...contextArticles.map(a => ({ ...a.data, category: 'context' }))
+];
+
+// Count articles by category
+const hopeCount = hopeArticles.length;
+const despairCount = despairArticles.length;
+const contextCount = contextArticles.length;
+const totalCount = allArticles.length;
+---
+
+<Layout title="Trends - Hope and Despair">
+	<Navigation />
+	
+	<header class="page-header">
+		<div class="container">
+			<h1 class="page-title">Hope vs Despair Trends</h1>
+			<p class="page-subtitle">Tracking the emotional pulse of our times through data visualization</p>
+		</div>
+	</header>
+
+	<main class="trends-main">
+		<div class="container">
+			<div class="intro-section">
+				<h2>Understanding Sentiment Patterns</h2>
+				<p>
+					Our sentiment analysis tracks the emotional resonance of news stories over time, revealing patterns 
+					in how global events shape our collective outlook. This isn't just about counting positive vs negative 
+					headlines—it's about understanding the deeper emotional currents that influence how we see our world.
+				</p>
+			</div>
+
+			<div class="chart-section">
+				<TrendsChart height={450} articlesData={allArticles} />
+			</div>
+			
+			<script define:vars={{ allArticles }}>
+				// Make articles data available to the chart component
+				window.articlesData = allArticles;
+			</script>
+			
+			<div class="current-stats">
+				<h2>Distribution</h2>
+				<div class="stats-simple">
+					<div class="stat-item">
+						<span class="stat-value">{hopeCount}</span>
+						<span class="stat-desc">Hope</span>
+					</div>
+					<div class="stat-divider">·</div>
+					<div class="stat-item">
+						<span class="stat-value">{despairCount}</span>
+						<span class="stat-desc">Despair</span>
+					</div>
+					<div class="stat-divider">·</div>
+					<div class="stat-item">
+						<span class="stat-value">{totalCount}</span>
+						<span class="stat-desc">Total</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="insights-section">
+				<h2>Observations</h2>
+				<div class="insights-minimal">
+					<p>
+						Hope peaks around breakthroughs and policy wins. Major events create volatility—initial despair 
+						often followed by solution-focused hope. Stories mixing progress with setbacks tend to resonate 
+						most, reflecting our complex moment.
+					</p>
+				</div>
+			</div>
+
+			<div class="methodology-section">
+				<h2>Method</h2>
+				<div class="methodology-minimal">
+					<p>
+						We monitor diverse sources, analyze content using AI and human judgment, then classify stories 
+						along the hope-despair spectrum. Most pieces fall in the nuanced middle, reflecting complexity 
+						over extremes.
+					</p>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<footer>
+		<div class="container">
+			<p>&copy; 2025 Hope and Despair. Curated with care, analyzed with nuance.</p>
+		</div>
+	</footer>
+</Layout>
+
+<style>
+	.page-header {
+		padding: 140px 0 80px;
+		text-align: center;
+		background: linear-gradient(135deg, #fdfefe 0%, #f9faf8 50%, #fefdfb 100%);
+	}
+
+	.page-title {
+		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-size: 3.5rem;
+		font-weight: 600;
+		color: var(--text-primary);
+		margin-bottom: 20px;
+	}
+
+	.page-subtitle {
+		font-size: 1.2rem;
+		color: var(--text-secondary);
+		max-width: 600px;
+		margin: 0 auto;
+		line-height: 1.6;
+	}
+
+	.trends-main {
+		padding: 80px 0 120px;
+		background: var(--bg-primary);
+	}
+
+	.intro-section {
+		max-width: 800px;
+		margin: 0 auto 80px;
+		text-align: center;
+	}
+
+	.intro-section h2 {
+		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-size: 2.2rem;
+		color: var(--text-primary);
+		margin-bottom: 24px;
+	}
+
+	.intro-section p {
+		font-size: 1.1rem;
+		line-height: 1.8;
+		color: var(--text-secondary);
+	}
+
+	.chart-section {
+		margin: 80px 0;
+	}
+
+	.current-stats {
+		margin: 80px 0;
+		text-align: center;
+	}
+
+	.current-stats h2 {
+		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-size: 1.5rem;
+		color: var(--text-primary);
+		margin-bottom: 20px;
+		text-align: center;
+	}
+
+	.stats-simple {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 2rem;
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	.stat-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.stat-value {
+		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-size: 2rem;
+		font-weight: 600;
+		color: var(--text-primary);
+		line-height: 1;
+	}
+
+	.stat-desc {
+		font-size: 0.9rem;
+		color: var(--text-secondary);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.stat-divider {
+		font-size: 1.5rem;
+		color: var(--text-muted);
+		opacity: 0.5;
+	}
+
+	.insights-section {
+		margin: 80px 0;
+	}
+
+	.insights-section h2 {
+		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-size: 1.5rem;
+		color: var(--text-primary);
+		margin-bottom: 20px;
+		text-align: center;
+	}
+
+	.insights-minimal {
+		max-width: 700px;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.insights-minimal p {
+		font-size: 1.1rem;
+		line-height: 1.7;
+		color: var(--text-secondary);
+	}
+
+	.methodology-section {
+		margin: 80px 0;
+		max-width: 900px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.methodology-section h2 {
+		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-size: 1.5rem;
+		color: var(--text-primary);
+		margin-bottom: 20px;
+		text-align: center;
+	}
+
+	.methodology-minimal {
+		max-width: 700px;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.methodology-minimal p {
+		font-size: 1.1rem;
+		line-height: 1.7;
+		color: var(--text-secondary);
+	}
+
+	footer {
+		padding: 80px 0 60px;
+		text-align: center;
+		background: var(--bg-secondary);
+		color: var(--text-muted);
+	}
+
+	@media (max-width: 768px) {
+		.page-title {
+			font-size: 2.5rem;
+		}
+
+		.intro-section h2,
+		.insights-section h2,
+		.methodology-section h2,
+		.current-stats h2 {
+			font-size: 1.3rem;
+		}
+
+		.stats-simple {
+			gap: 1.5rem;
+		}
+
+		.stat-value {
+			font-size: 1.5rem;
+		}
+
+		.stat-desc {
+			font-size: 0.8rem;
+		}
+	}
+</style>
