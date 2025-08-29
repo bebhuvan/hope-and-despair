@@ -10,7 +10,11 @@ sourceLinkTitle: "From sea ice to ocean currents, Antarctica is now undergoing a
 sourceLinkDescription: "Scientific analysis reveals accelerating transformations in Antarctica's critical climate systems with global implications."
 timeAgo: "30 minutes ago"
 category: "despair"
-tags: ["climate", "antarctica", "sea-ice", "ocean-currents"]
+tags:
+  - climate
+  - antarctica
+  - sea-ice
+  - ocean-currents
 url: "/article/antarctica-abrupt-changes"
 ---
 

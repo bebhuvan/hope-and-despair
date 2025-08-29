@@ -1,16 +1,22 @@
 ---
 id: 7
-source: Our World in Data
-sourceUrl: https://x.com/OurWorldInData/status/1958923568282026386
-sourceLinkTitle: Scientists whose innovations saved millions of lives
-sourceLinkDescription: Visual breakdown of major scientific innovations and their life-saving impact, with estimates of lives saved.
-timeAgo: 1 minute ago
+source: "Our World in Data"
+sourceUrl: "https://x.com/OurWorldInData/status/1958923568282026386"
+sourceLinkTitle: "Scientists whose innovations saved millions of lives"
+sourceLinkDescription: "Visual breakdown of major scientific innovations and their life-saving impact, with estimates of lives saved."
+timeAgo: "1 minute ago"
 date: 2025-08-26T00:00:00.000Z
 title: "Scientists Whose Innovations Saved Millions of Lives: A Visual History of Life-Saving Breakthroughs"
 summary: "From insulin that transformed diabetes care to vaccines that eradicated diseases, scientific innovations have saved hundreds of millions of lives. This comprehensive visualization maps the most impactful medical and scientific breakthroughs alongside the brilliant minds who made them possible."
-category: hope
-tags: [science, medical-breakthroughs, public-health, innovation, vaccines, life-saving]
-url: /article/scientists-innovations-saved-millions-lives
+category: "hope"
+tags:
+  - science
+  - medical-breakthroughs
+  - public-health
+  - innovation
+  - vaccines
+  - life-saving
+url: "/article/scientists-innovations-saved-millions-lives"
 ---
 
 <div class="article-image">

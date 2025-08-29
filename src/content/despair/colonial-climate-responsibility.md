@@ -7,7 +7,9 @@ date: 2025-08-22T00:00:00.000Z
 source: "Carbon Brief"
 timeAgo: "2 hours ago"
 category: "despair"
-tags: ["climate", "history"]
+tags:
+  - climate
+  - history
 url: "/article/colonial-climate-responsibility"
 ---
 

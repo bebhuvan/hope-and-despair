@@ -10,7 +10,12 @@ sourceLinkTitle: "Why EVs Are Now Cheaper Than Gas Cars in China"
 sourceLinkDescription: "Data analysis showing how electric vehicles have achieved price parity and beyond in China's massive auto market."
 timeAgo: "2 minutes ago"
 category: "hope"
-tags: ["electric-vehicles", "china", "automotive", "economics", "technology"]
+tags:
+  - electric-vehicles
+  - china
+  - automotive
+  - economics
+  - technology
 url: "/article/evs-cheaper-than-gas-cars-china"
 ---
 

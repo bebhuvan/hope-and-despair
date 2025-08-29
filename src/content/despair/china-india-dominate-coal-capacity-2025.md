@@ -10,7 +10,13 @@ sourceLinkTitle: "China and India account for 87% of new coal power capacity so 
 sourceLinkDescription: "Analysis showing how China and India are dominating global coal power expansion in the first half of 2025, accounting for 87% of new capacity."
 timeAgo: "2 hours ago"
 category: "despair"
-tags: ["coal", "china", "india", "climate", "emissions", "energy"]
+tags:
+  - coal
+  - china
+  - india
+  - climate
+  - emissions
+  - energy
 url: "/article/china-india-dominate-coal-capacity-2025"
 ---
 

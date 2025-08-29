@@ -7,7 +7,9 @@ date: 2025-08-20T00:00:00.000Z
 source: "Our World in Data"
 timeAgo: "2 days ago"
 category: "hope"
-tags: ["forests", "agriculture"]
+tags:
+  - forests
+  - agriculture
 url: "/article/forests-recovery-possible"
 ---
 

@@ -7,7 +7,12 @@ date: 2025-08-25T00:00:00.000Z
 source: "Ember"
 timeAgo: "5 minutes ago"
 category: "hope"
-tags: ["energy", "solar", "renewables", "climate", "electrification"]
+tags:
+  - energy
+  - solar
+  - renewables
+  - climate
+  - electrification
 url: "/article/five-years-clean-energy-progress"
 ---
 

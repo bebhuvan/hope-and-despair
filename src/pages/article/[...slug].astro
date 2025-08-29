@@ -1,22 +1,60 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 
-export async function getStaticPaths() {
-  const hopeArticles = await getCollection('hope');
-  const despairArticles = await getCollection('despair');
-  const contextArticles = await getCollection('context');
-  
-  const allArticles = [...hopeArticles, ...despairArticles, ...contextArticles];
-  
-  return allArticles.map((article) => ({
-    params: { slug: article.slug },
-    props: { article },
-  }));
+// Get the slug from the URL parameters
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/');
 }
 
-const { article } = Astro.props;
+// Try to find the article in all collections
+let article = null;
+let collection = null;
+
+try {
+  // Check hope collection
+  try {
+    article = await getEntry('hope', slug);
+    if (article) collection = 'hope';
+  } catch (e) {}
+  
+  // Check despair collection if not found
+  if (!article) {
+    try {
+      article = await getEntry('despair', slug);
+      if (article) collection = 'despair';
+    } catch (e) {}
+  }
+  
+  // Check context collection if not found
+  if (!article) {
+    try {
+      article = await getEntry('context', slug);
+      if (article) collection = 'context';
+    } catch (e) {}
+  }
+  
+  if (!article) {
+    return Astro.redirect('/');
+  }
+  
+  // Add the category to the article data if it's missing
+  if (!article.data.category) {
+    article.data.category = collection;
+  }
+} catch (error) {
+  console.error('Error fetching article:', error);
+  return Astro.redirect('/');
+}
+
+// Final safety check before rendering
+if (!article) {
+  return Astro.redirect('/');
+}
+
 const { Content } = await article.render();
 
 const categoryColors = {

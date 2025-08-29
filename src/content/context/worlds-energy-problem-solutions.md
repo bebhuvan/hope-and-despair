@@ -7,7 +7,11 @@ date: 2025-08-25T00:00:00.000Z
 source: "Our World in Data"
 timeAgo: "1 hour ago"
 category: "context"
-tags: ["energy", "climate", "poverty", "innovation"]
+tags:
+  - energy
+  - climate
+  - poverty
+  - innovation
 url: "/article/worlds-energy-problem-solutions"
 ---
 
