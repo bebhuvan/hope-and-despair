@@ -1,20 +1,16 @@
 #:schema node_modules/wrangler/config-schema.json
 name = "hope-and-despair"
-main = "./dist/_worker.js"
+main = "./dist/_worker.js/index.js"
 compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Workers Static Assets configuration
+[assets]
+directory = "./dist"
+binding = "ASSETS"
 
 [vars]
 # Environment variables will go here
-
-# Static assets configuration - serves images directly without KV storage
-[site]
-bucket = "./dist"
-include = ["**/*"]
-exclude = []
-
-# Build configuration
-[build]
-command = "npm run build"
 
 [env.development.vars]
 # Development environment variables
